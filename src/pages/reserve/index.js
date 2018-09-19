@@ -12,16 +12,14 @@ import './index.less';
 const tabs = [ { title: '全部' }, { title: '待处理' }, { title: '进行中' }, { title: '已完成' } ];
 
 const tabBarUnderlineStyle = {
-	width: '17%',
-	left: '4%',
+	width: '11%',
+	left: '7%',
 	borderColor: '#5767C8'
 };
 
 class Reserve extends Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {};
 	}
 
 	componentDidMount() {}
@@ -35,8 +33,9 @@ class Reserve extends Component {
 					tabBarUnderlineStyle={tabBarUnderlineStyle}
 					tabBarActiveTextColor="#5767C8"
 					tabBarInactiveTextColor="#6E6E6E"
-          onChange={this.tabChange}
-          prerenderingSiblingsNumber="0"
+					onChange={this.tabChange}
+					useOnPan={true}
+					prerenderingSiblingsNumber={1}
 				>
 					<ListAll status={0} />
 					<ListTreated status={1} />
@@ -49,7 +48,7 @@ class Reserve extends Component {
 
 	// Tab 切换
 	tabChange = (title, index) => {
-		tabBarUnderlineStyle.left = `${4 + 25 * index}%`;
+		tabBarUnderlineStyle.left = `${7 + 25 * index}%`;
 	};
 }
 const mapStateToProps = (store) => {

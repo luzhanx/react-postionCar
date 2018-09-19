@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 // import Login from '@/pages/login/loadable';
 import Reserve from '@/pages/reserve';
 import Test from '@/pages/test';
+import Map from '@/pages/map';
 
 // 引入文件
 import store from '@/store';
@@ -20,6 +21,7 @@ class App extends Component {
 						<Route path="/" exact component={Reserve} />
 						{/* <Route path="/home" exact component={Home} /> */}
 						<Route path="/test" component={Test} />
+						<Route path="/map/id/:id"  component={Map} />
 						<Route path="/reserve" component={Reserve} />
 					</Switch>
 				</Provider>
