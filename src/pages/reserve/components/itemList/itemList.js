@@ -25,7 +25,9 @@ class ItemList extends React.Component {
 			this.props.status === 0 ? 'reserve' : this.props.status === 1 ? '1' : this.props.status === 2 ? '2' : '3';
 		Toast.loading('数据加载中...');
 
-		Axios.get(`/api/${id}.json`, { params: { id: id } }).then((result) => {
+		Axios.get(`https://luzhanx.github.io/react-postionCar/api/${id}.json`, {
+			params: { id: id }
+		}).then((result) => {
 			let res = result.data;
 
 			that.setState(
@@ -52,7 +54,7 @@ class ItemList extends React.Component {
 		let id =
 			this.props.status === 0 ? 'reserve' : this.props.status === 1 ? '1' : this.props.status === 2 ? '2' : '3';
 
-		Axios.get(`/api/${id}.json`, { params: { id: id } }).then((result) => {
+		Axios.get(`https://luzhanx.github.io/react-postionCar/api/${id}.json`, { params: { id: id } }).then((result) => {
 			let res = result.data;
 
 			that.setState({
