@@ -22,7 +22,8 @@ class Reserve extends Component {
 		super(props);
 	}
 
-	componentDidMount() {}
+	componentDidMount() {
+	}
 
 	render() {
 		return (
