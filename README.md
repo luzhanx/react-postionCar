@@ -13,7 +13,7 @@ Api(status, page, limit)
 {
   "code": 1,                            // 成功状态
 	"list": [
-		{
+	{
 			"id": 11,							            // ID
 			"license_plate": "粤B - KY666",   // 车牌号
 			"personnel": "马飞飞",            // 服务人员
