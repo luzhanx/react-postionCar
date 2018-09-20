@@ -42,7 +42,7 @@ class ItemList extends React.Component {
 	}
 	// 上拉加载
 	onEndReached = (event) => {
-		// 加载完请求的20个数据
+		// 加载完请求的10个数据
 		// HasMe:从后端数据，指示它是否是最后一页，这里是false
 
 		if (this.state.refreshing && !this.state.hasMore) {
