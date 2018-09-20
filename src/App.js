@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import Reserve from '@/pages/reserve';
 import Test from '@/pages/test';
 import Map from '@/pages/map';
+import Add from '@/pages/add/loadable';
 
 // 引入文件
 import store from '@/store';
@@ -18,10 +19,10 @@ class App extends Component {
 			<div className="app">
 				<Provider store={store}>
 					<Switch>
-						<Route path="/" exact component={Reserve} />
+						<Route path="/" exact component={Add} />
 						{/* <Route path="/home" exact component={Home} /> */}
 						<Route path="/test" component={Test} />
-						<Route path="/map/id/:id"  component={Map} />
+						<Route path="/map/id/:id" component={Map} />
 						<Route path="/reserve" component={Reserve} />
 					</Switch>
 				</Provider>
