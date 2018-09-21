@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 // import Home from '@/pages/home';
 // import Login from '@/pages/login/loadable';
 import Reserve from '@/pages/reserve';
-import Test from '@/pages/test';
+// import Test from '@/pages/test';
 import Map from '@/pages/map';
 import Add from '@/pages/add/loadable';
 
@@ -21,7 +21,7 @@ class App extends Component {
 					<Switch>
 						<Route path="/" exact component={Reserve} />
 						{/* <Route path="/home" exact component={Home} /> */}
-						<Route path="/test" component={Test} />
+						{/* <Route path="/test" component={Test} /> */}
 						<Route path="/add" component={Add} />
 						<Route path="/map/id/:id" component={Map} />
 						<Route path="/reserve" component={Reserve} />

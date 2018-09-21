@@ -31,8 +31,9 @@
 				height: 210px;
 				border-radius: 8px;
 				border: 2px solid #f5f5f5;
+				margin:  10px 0;
 				position: relative;
-				background-size: contain;
+				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
 				&:active {
@@ -78,6 +79,7 @@
 			padding: 15px 15px;
 			padding-top: 10px;
 			display: flex;
+			position: relative;
 			&.nopl {
 				padding-left: 0;
 				margin: 10px 0;
@@ -88,13 +90,51 @@
 			background: #fff;
 			overflow: hidden;
 			border-radius: 8px;
+			display: flex;
 			box-shadow: 0 0 5px #ededed;
+			div:first-child{
+				width: 100%;
+			}
 			.am-list-item .am-input-control input {
 				color: #a5a5a5;
 				font-size: 14px;
 			}
-			.am-list-item.am-input-item {
+			.chepai {
+				width: 100px !important;
+				.chepai_text{
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					text-align: center;
+					.chepai_item{
+						flex: 1;
+					}
+				}
+			}
+			.sendCode{
+				width: 140px;
 				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				color: #5767C8;
+				font-size: 12px;
+			}
+			.am-list-item {
+				width: 100%;
+			}
+			.am-list-line{
+				width: 100%;
+			}
+			.chepainum {
+				flex: 1;
+				padding-right: 15px;
+				.am-list-item.am-input-item {
+					padding-left: 0rem;
+				}
+				.am-list-item .am-list-line {
+					padding-right: 0rem;
+				}
 			}
 		}
 	}
@@ -136,5 +176,8 @@
 	.am-list-extra {
 		flex: 1;
 		text-align: left !important;
+	}
+	.am-list-item {
+		height: 46px;
 	}
 }

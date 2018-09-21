@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { InputItem, DatePicker, List, PickerView } from 'antd-mobile';
+import { InputItem, DatePicker, List, Picker, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
+import Axios from 'axios';
+import wx from 'weixin-js-sdk';
 
+import chepais from './chepai';
 import './index.less';
+
+const codeSendMin = 60;
+
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
 let moneyKeyboardWrapProps;
 if (isIPhone) {
@@ -13,27 +19,110 @@ if (isIPhone) {
 	};
 }
 
+// 格式化时间 yyyy-MM-dd HH:MM:SS
+const getNowFormatDate = (date) => {
+	console.log(date);
+	var seperator1 = '-';
+	var seperator2 = ':';
+	var month = date.getMonth() + 1;
+	var strDate = date.getDate();
+	if (month >= 1 && month <= 9) {
+		month = '0' + month;
+	}
+	if (strDate >= 0 && strDate <= 9) {
+		strDate = '0' + strDate;
+	}
+	var currentdate =
+		date.getFullYear() +
+		seperator1 +
+		month +
+		seperator1 +
+		strDate +
+		' ' +
+		date.getHours() +
+		seperator2 +
+		date.getMinutes() +
+		seperator2 +
+		date.getSeconds();
+	return currentdate;
+};
+
+//车牌号验证方法
+function isVehicleNumber(vehicleNumber) {
+	var xreg = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF]$)|([DF][A-HJ-NP-Z0-9][0-9]{4}$))/;
+
+	var creg = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1}$/;
+
+	if (vehicleNumber.length == 7) {
+		return creg.test(vehicleNumber);
+	} else if (vehicleNumber.length == 8) {
+		return xreg.test(vehicleNumber);
+	} else {
+		return false;
+	}
+}
 class Add extends Component {
 	constructor(props) {
 		super(props);
 
 		document.title = '预约详情';
 		this.state = {
-			upImage: ''
+			upImage: '',
+			chepai: [ '粤', 'F' ],
+			countdown: codeSendMin,
+			sendCodeText: '发送验证码'
 		};
 	}
+	componentWillMount() {
+		Axios.get('https://vehicle-location.xtow.net/index/Weixin/jssdkConfig').then((result) => {
+			console.log(result);
+		});
+		console.log('wx');
+		// wx.config({
+		// 	debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+		// 	jsApiList: [
+		// 		'getLocation',
+		// 	]
+		// })
+		// wx.getLocation({
+		// 	type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+		// 	success: function(res) {
+		// 		var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+		// 		var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+		// 		var speed = res.speed; // 速度，以米/每秒计
+		// 		var accuracy = res.accuracy; // 位置精度
 
+		// 		console.log(res);
+		// 	}
+		// });
+	}
+	componentDidMount() {
+		wx.getLocation({
+			type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+			success: function(res) {
+				var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+				var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+				var speed = res.speed; // 速度，以米/每秒计
+				var accuracy = res.accuracy; // 位置精度
+
+				console.log(res);
+			}
+		});
+	}
+
+	// 选择上传图片
 	handleUpImage = (e) => {
-		console.log(e.target.value);
+		// console.log(e.target.value);
 		let that = this;
 
+		if (!e.target.files[0]) {
+			return;
+		}
 		var reads = new FileReader();
 		reads.readAsDataURL(e.target.files[0]);
 		reads.onload = function(e) {
 			console.log(this.result);
-			// document.getElementById('show').src=this.result;
 			that.setState({
-				// upImage: this.result
 				upImage: this.result
 			});
 		};
@@ -42,6 +131,160 @@ class Add extends Component {
 			upImage: e.target.value
 		});
 	};
+
+	// 开始发送验证码
+	settime = (val) => {
+		let that = this;
+		let countdown = that.state.countdown;
+
+		if (countdown === 0) {
+			that.setState({
+				countdown: codeSendMin,
+				sendCodeText: '发送验证码'
+			});
+		} else {
+			// val.setAttribute('disabled', true);
+			// val.value = '重新发送(' + countdown + ')';
+			console.log(countdown);
+			that.setState({
+				sendCodeText: `重新发送 ${countdown}s`,
+				countdown: --countdown
+			});
+			setTimeout(function() {
+				that.settime(val);
+			}, 1000);
+		}
+	};
+	// 改变车牌
+	onChepaiChange = (value) => {
+		console.log(value);
+		this.setState({
+			chepai: value
+		});
+	};
+	// 格式化车牌号
+	chepaiFormat = (labels) => {
+		return (
+			<div className="chepai_text">
+				<div className="chepai_item">{labels[0]}</div>
+				<div className="chepai_item">{labels[1]}</div>
+			</div>
+		);
+	};
+	// 发送验证码
+	handleSendCode = () => {
+		let phoneVal = this.phone.state.value.replace(/\s+/g, '');
+
+		// 倒计时的时候不允许点击
+		if (this.state.countdown < codeSendMin) {
+			Toast.fail('一分钟内容只能发送一次', 1.5);
+			return;
+		}
+		if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(phoneVal)) {
+			Toast.fail('手机号码不正确', 1.5);
+			console.log(phoneVal, '手机号码不正确');
+			return;
+		}
+		Toast.loading('发送验证码中');
+		Axios.get('https://vehicle-location.xtow.net/index/Login/sendSmsCode', {
+			params: {
+				phone: phoneVal
+			}
+		})
+			.then((result) => {
+				let res = result;
+
+				if (res.code === 0) {
+					Toast.success(res.msg, 1);
+				} else {
+					Toast.success(res.msg, 1);
+				}
+				console.log(result);
+			})
+			.catch((e) => {
+				console.log(e);
+			});
+
+		this.settime(codeSendMin);
+		console.log('sendcode');
+	};
+	// 预约时间
+	onDateChange = (value) => {
+		console.log(value);
+		this.setState({
+			appoint_time: value
+		});
+	};
+
+	// 检验数据
+	checkResult() {
+		// let img =
+		let arrear = this.arrear.state.value;
+		let contact = this.contact.state.value;
+		let plate_number = this.state.chepai[0] + this.state.chepai[1] + this.chepai_num.state.value;
+		let phone = this.phone.state.value.replace(/\s+/g, '');
+		let address = this.address.state.value;
+		let appoint_time = this.state.appoint_time;
+		let code = this.code.state.value;
+
+		if (!code || code === '') {
+			return { status: false, msg: '请输入验证码' };
+		}
+
+		if (!arrear || arrear === '') {
+			return { status: false, msg: '身份证格式错误' };
+		}
+
+		if (!contact || contact === '') {
+			return { status: false, msg: '联系人格式不正确' };
+		}
+
+		if (!plate_number || plate_number === '' || !isVehicleNumber(plate_number)) {
+			return { status: false, msg: '车牌号码格式不正确' };
+		}
+
+		if (!appoint_time || appoint_time === '') {
+			return { status: false, msg: '请选择预约时间' };
+		}
+
+		if (!address || address === '') {
+			return { status: false, msg: '取车地址不能为空' };
+		}
+
+		if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(phone)) {
+			return { status: false, msg: '手机号码格式不正确' };
+		}
+
+		let formatData = {
+			arrear: arrear, // 身份证后四位数
+			contact: contact, // 联系人
+			plate_number: plate_number, // 车牌号
+			phone: phone, // 联系电话
+			address: address, // 取车地址
+			appoint_time: getNowFormatDate(appoint_time), // 取车时间
+			code: code // 短信验证码
+		};
+		console.log(formatData);
+		return {
+			status: true,
+			msg: '数据验证通过',
+			formatData
+		};
+	}
+
+	// 立即预约
+	submit = () => {
+		// let { contact, arrear, chepai, plate_number, phone, address, appoint_time, code } = this.state;
+
+		let checkResult = this.checkResult();
+		if (!checkResult.status) {
+			Toast.fail(checkResult.msg, 1.5);
+			return;
+		}
+
+		console.log(this.state);
+	};
+
 	render() {
 		const { getFieldProps } = this.props.form;
 
@@ -58,7 +301,7 @@ class Add extends Component {
 								ref={(el) => (this.upImage = el)}
 								className="imgFile"
 							/>
-							<div className="addCss" />
+							{this.state.upImage === '' ? <div className="addCss" /> : ''}
 						</div>
 					</div>
 					<div className="title">
@@ -78,7 +321,7 @@ class Add extends Component {
 									}
 								})}
 								type={'money'}
-								ref={(el) => (this.inputRef = el)}
+								ref={(el) => (this.arrear = el)}
 								clear
 								maxLength={4}
 								moneyKeyboardWrapProps={moneyKeyboardWrapProps}
@@ -89,19 +332,32 @@ class Add extends Component {
 				<div className="row">
 					<div className="key">车牌</div>
 					<div className="value">
-						<InputItem {...getFieldProps('chepai')} clear ref={(el) => (this.chepai = el)} />
+						<div className="chepai">
+							<Picker
+								data={chepais}
+								cascade={false}
+								value={this.state.chepai}
+								onChange={this.onChepaiChange}
+								format={this.chepaiFormat}
+							>
+								<List.Item arrow="" />
+							</Picker>
+						</div>
+						<div className="chepainum">
+							<InputItem placeholder={'车牌编号'} clear ref={(el) => (this.chepai_num = el)} />
+						</div>
 					</div>
 				</div>
 				<div className="row">
 					<div className="key">联系人</div>
 					<div className="value">
-						<InputItem {...getFieldProps('lianxiren')} clear ref={(el) => (this.lianxiren = el)} />
+						<InputItem clear ref={(el) => (this.contact = el)} />
 					</div>
 				</div>
 				<div className="row">
 					<div className="key">预约时间</div>
 					<div className="value">
-						<DatePicker value={this.state.date} onChange={(date) => this.setState({ date })}>
+						<DatePicker mode="datetime" value={this.state.appoint_time} onChange={this.onDateChange}>
 							<List.Item arrow="horizontal" />
 						</DatePicker>
 					</div>
@@ -109,19 +365,22 @@ class Add extends Component {
 				<div className="row">
 					<div className="key">取车地址</div>
 					<div className="value">
-						<InputItem {...getFieldProps('address')} clear ref={(el) => (this.address = el)} />
+						<InputItem clear ref={(el) => (this.address = el)} />
 					</div>
 				</div>
 				<div className="row">
 					<div className="key">手机号</div>
 					<div className="value">
-						<InputItem {...getFieldProps('phone')} type={'phone'} clear ref={(el) => (this.phone = el)} />
+						<InputItem type={'phone'} clear ref={(el) => (this.phone = el)} />
+						<div className="sendCode" onClick={this.handleSendCode}>
+							{this.state.sendCodeText}
+						</div>
 					</div>
 				</div>
 				<div className="row">
 					<div className="key">验证码</div>
 					<div className="value">
-						<InputItem {...getFieldProps('code')} clear ref={(el) => (this.code = el)} />
+						<InputItem type={'number'} clear ref={(el) => (this.code = el)} />
 					</div>
 				</div>
 				<div className="row">
@@ -132,7 +391,9 @@ class Add extends Component {
 						</Link>
 					</div>
 				</div>
-				<div className="submit">立即预约</div>
+				<div className="submit" onClick={this.submit}>
+					立即预约
+				</div>
 				<div className="tip">
 					<div>点击提交预约则默认为同意</div>
 					<Link to="/agreement" className="link">

@@ -81,11 +81,6 @@ class ItemList extends React.Component {
 					onRefresh={this.onEndReached}
 				>
 					<div className="tabPage">
-						<div className="item" style={{ height:'129px' }}>
-							<a href="https://www.baidu.com" style={{ display: 'block', height:'100%' }}>
-								a Href Router
-							</a>
-						</div>
 						{this.state.data.map((item, rowID) => (
 							<div key={rowID} className="item">
 								<div className="license_plate">

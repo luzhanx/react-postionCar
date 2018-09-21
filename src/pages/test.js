@@ -140,6 +140,16 @@
 //           data={seasons}
 //           cascade={false}
 //         />
+//         <WhiteSpace /><WhiteSpace />
+//         <PickerView
+//           data={season}
+//           cascade={false}
+//         />
+//         <WhiteSpace /><WhiteSpace />
+//         <PickerView
+//           data={province}
+//           value={['02', '02-1', '02-1-1']}
+//         />
 //       </div>
 //     );
 //   }
