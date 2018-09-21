@@ -29,7 +29,7 @@ class ItemList extends React.Component {
 			params: { id: id }
 		}).then((result) => {
 			let res = result.data;
-
+			console.log(result)
 			that.setState(
 				{
 					data: res.list,

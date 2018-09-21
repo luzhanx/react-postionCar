@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { InputItem, DatePicker, List } from 'antd-mobile';
+import { InputItem, DatePicker, List, PickerView } from 'antd-mobile';
 import { createForm } from 'rc-form';
 
 import './index.less';
@@ -13,7 +13,6 @@ if (isIPhone) {
 	};
 }
 
-
 class Add extends Component {
 	constructor(props) {
 		super(props);
@@ -21,28 +20,28 @@ class Add extends Component {
 		document.title = '预约详情';
 		this.state = {
 			upImage: ''
-		}
+		};
 	}
 
-	handleUpImage = (e)=> {
-		console.log(e.target.value)
+	handleUpImage = (e) => {
+		console.log(e.target.value);
 		let that = this;
 
-		var reads= new FileReader();
+		var reads = new FileReader();
 		reads.readAsDataURL(e.target.files[0]);
-		reads.onload=function (e) {
-			console.log(this.result)
-				// document.getElementById('show').src=this.result;
-				that.setState({
-					// upImage: this.result
-					upImage: this.result
-				})
+		reads.onload = function(e) {
+			console.log(this.result);
+			// document.getElementById('show').src=this.result;
+			that.setState({
+				// upImage: this.result
+				upImage: this.result
+			});
 		};
 		this.setState({
 			// upImage: e.target.files[0]
 			upImage: e.target.value
-		})
-	}
+		});
+	};
 	render() {
 		const { getFieldProps } = this.props.form;
 
@@ -52,7 +51,13 @@ class Add extends Component {
 					<div className="title">上传资料</div>
 					<div className="autoRow">
 						<div className="addImg" style={{ backgroundImage: `url(${this.state.upImage})` }}>
-							<input type="file" onChange={this.handleUpImage} ref={(el)=> this.upImage = el}  className="imgFile" />
+							<input
+								accept="image/*"
+								type="file"
+								onChange={this.handleUpImage}
+								ref={(el) => (this.upImage = el)}
+								className="imgFile"
+							/>
 							<div className="addCss" />
 						</div>
 					</div>
@@ -61,12 +66,11 @@ class Add extends Component {
 						<div className="value">
 							<InputItem
 								{...getFieldProps('sfz', {
-
 									normalize: (v) => {
-										if (!v){
+										if (!v) {
 											return v;
 										}
-										console.log(v)
+										console.log(v);
 										if (v === '.') {
 											return '';
 										}
@@ -97,7 +101,7 @@ class Add extends Component {
 				<div className="row">
 					<div className="key">预约时间</div>
 					<div className="value">
-						<DatePicker  onChange={(date) => this.setState({ date })}>
+						<DatePicker value={this.state.date} onChange={(date) => this.setState({ date })}>
 							<List.Item arrow="horizontal" />
 						</DatePicker>
 					</div>
