@@ -26,7 +26,7 @@ class ItemList extends React.Component {
 		Toast.loading('数据加载中...');
 
 		Axios.get(`https://luzhanx.github.io/react-postionCar/api/${id}.json`, {
-			params: { id: id }
+			params: { id: Math.random() }
 		}).then((result) => {
 			let res = result.data;
 			console.log(result)
