@@ -4,6 +4,18 @@
 #### [React Antd](https://mobile.ant.design/components)
 
 #### [API文档](https://www.kancloud.cn/xtuo/vehicle-location/770389)
+
+
+#### [引用腾讯地图](https://lbs.qq.com/javascript_v2/index.html)
+```javascript
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script>
+<script>window.QMap = qq.maps</script>
+config\webpack.config.dev.js 加入
+	externals:{
+    'QMap': 'qq.maps'
+	},
+	项目直接 window.QMap
+```
 ```javascript
 /**
  * 预约列表接口
@@ -28,4 +40,12 @@ Api(status, page, limit)
 }
 
 ```
-
+	"proxy": {
+		"/visit": {
+			"target": "https://vehicle-location.xtow.net",
+			"changeOrigin": true,
+			"pathRewrite": {
+				"^/visit": "/"
+			}
+		}
+	}

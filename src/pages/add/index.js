@@ -53,9 +53,9 @@ function isVehicleNumber(vehicleNumber) {
 
 	var creg = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1}$/;
 
-	if (vehicleNumber.length == 7) {
+	if (vehicleNumber.length === 7) {
 		return creg.test(vehicleNumber);
-	} else if (vehicleNumber.length == 8) {
+	} else if (vehicleNumber.length === 8) {
 		return xreg.test(vehicleNumber);
 	} else {
 		return false;
@@ -74,41 +74,29 @@ class Add extends Component {
 		};
 	}
 	componentWillMount() {
-		Axios.get('https://vehicle-location.xtow.net/index/Weixin/jssdkConfig').then((result) => {
-			console.log(result);
-		});
-		console.log('wx');
-		// wx.config({
-		// 	debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-		// 	jsApiList: [
-		// 		'getLocation',
-		// 	]
-		// })
-		// wx.getLocation({
-		// 	type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-		// 	success: function(res) {
-		// 		var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-		// 		var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-		// 		var speed = res.speed; // 速度，以米/每秒计
-		// 		var accuracy = res.accuracy; // 位置精度
-
+		// Toast.loading('加载中');
+		// Axios.post('https://vehicle-location.xtow.net/index/Weixin/jssdkConfig').then((result) => {
+		// 	let res = result.data;
+		// 	if (res.code === 0) {
+		// 		console.log(res.result);
+		// 		wx.config({
+		// 			debug: true,
+		// 			appId: res.result.appId,
+		// 			timestamp: res.result.timestamp,
+		// 			nonceStr: res.result.nonceStr,
+		// 			signature: res.result.signature,
+		// 			jsApiList: [ 'getLocation' ]
+		// 		});
 		// 		console.log(res);
+		// 	} else {
+		// 		Toast.info('获取微信签名失败', 1000);
+		// 		console.log(result);
 		// 	}
 		// });
 	}
-	componentDidMount() {
-		wx.getLocation({
-			type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-			success: function(res) {
-				var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-				var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-				var speed = res.speed; // 速度，以米/每秒计
-				var accuracy = res.accuracy; // 位置精度
-
-				console.log(res);
-			}
-		});
-	}
+	// 打开腾讯地图
+	handleOpenMap = () => {};
+	componentDidMount() {}
 
 	// 选择上传图片
 	handleUpImage = (e) => {
@@ -364,8 +352,8 @@ class Add extends Component {
 				</div>
 				<div className="row">
 					<div className="key">取车地址</div>
-					<div className="value">
-						<InputItem clear ref={(el) => (this.address = el)} />
+					<div className="value" onClick={this.handleOpenMap}>
+						{/* <InputItem clear ref={(el) => (this.address = el)} /> */}
 					</div>
 				</div>
 				<div className="row">

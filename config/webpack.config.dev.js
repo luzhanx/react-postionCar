@@ -262,5 +262,8 @@ module.exports = {
   // cumbersome.
   performance: {
     hints: false,
+	},
+	externals:{
+    'QMap': 'qq.maps'
   },
 };

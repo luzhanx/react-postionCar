@@ -10,7 +10,9 @@
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+	<!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json"> -->
+	<!-- 3KLBZ-7PHH6-HCCST-M67GO-EYZHJ-YIBXS -->
+	<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script>
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -45,7 +47,8 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
-  <div id="root"></div>
+	<div id="root"></div>
+	<script>window.QMap = qq.maps</script>
   <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

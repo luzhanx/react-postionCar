@@ -23,7 +23,7 @@ class App extends Component {
 						{/* <Route path="/home" exact component={Home} /> */}
 						{/* <Route path="/test" component={Test} /> */}
 						<Route path="/add" component={Add} />
-						<Route path="/map/id/:id" component={Map} />
+						<Route path="/map" component={Map} />
 						<Route path="/reserve" component={Reserve} />
 					</Switch>
 				</Provider>
