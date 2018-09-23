@@ -29,15 +29,12 @@ class ItemList extends React.Component {
 			params: { id: Math.random() }
 		}).then((result) => {
 			let res = result.data;
-			console.log(result)
-			that.setState(
-				{
-					data: res.list,
-					height: hei,
-					refreshing: false
-				},
-				() => Toast.hide()
-			);
+			that.setState({
+				data: res.list,
+				height: hei,
+				refreshing: false
+			});
+			Toast.hide();
 		});
 	}
 	// 上拉加载

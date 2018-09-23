@@ -12,7 +12,7 @@
     -->
 	<!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json"> -->
 	<!-- 3KLBZ-7PHH6-HCCST-M67GO-EYZHJ-YIBXS -->
-	<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script>
+	<!-- <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script> -->
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -24,23 +24,23 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
   <!-- uc强制竖屏 -->
-  <meta name="screen-orientation" content="portrait">
+  <!-- <meta name="screen-orientation" content="portrait"> -->
 
   <!-- UC强制全屏 -->
-  <meta name="full-screen" content="yes">
+  <!-- <meta name="full-screen" content="yes"> -->
 
   <!-- UC应用模式 -->
-  <meta name="browsermode" content="application">
+  <!-- <meta name="browsermode" content="application"> -->
 
   <!-- QQ强制竖屏 -->
-  <meta name="x5-orientation" content="portrait">
+  <!-- <meta name="x5-orientation" content="portrait"> -->
 
   <!-- QQ强制全屏 -->
-  <meta name="x5-fullscreen" content="true">
+  <!-- <meta name="x5-fullscreen" content="true"> -->
 
   <!-- QQ应用模式 -->
-  <meta name="x5-page-mode" content="app">
-  <title>React App</title>
+  <!-- <meta name="x5-page-mode" content="app"> -->
+  <title></title>
 </head>
 
 <body>
@@ -48,7 +48,12 @@
     You need to enable JavaScript to run this app.
   </noscript>
 	<div id="root"></div>
-	<script>window.QMap = qq.maps</script>
+	<script>
+		function init(){
+			window.QMap = qq.maps
+			console.log(window.QMap)
+		}
+	</script>
   <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

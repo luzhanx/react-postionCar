@@ -68,34 +68,58 @@ class Add extends Component {
 		document.title = '预约详情';
 		this.state = {
 			upImage: '',
-			chepai: [ '粤', 'F' ],
+			chepai: [ '粤', 'B' ],
 			countdown: codeSendMin,
-			sendCodeText: '发送验证码'
+			sendCodeText: '发送验证码',
+			isShowMap: false,
+			location: {
+				poiname: '点击选择'
+			}
 		};
 	}
+
 	componentWillMount() {
-		// Toast.loading('加载中');
-		// Axios.post('https://vehicle-location.xtow.net/index/Weixin/jssdkConfig').then((result) => {
-		// 	let res = result.data;
-		// 	if (res.code === 0) {
-		// 		console.log(res.result);
-		// 		wx.config({
-		// 			debug: true,
-		// 			appId: res.result.appId,
-		// 			timestamp: res.result.timestamp,
-		// 			nonceStr: res.result.nonceStr,
-		// 			signature: res.result.signature,
-		// 			jsApiList: [ 'getLocation' ]
-		// 		});
-		// 		console.log(res);
-		// 	} else {
-		// 		Toast.info('获取微信签名失败', 1000);
-		// 		console.log(result);
-		// 	}
-		// });
+		let that = this;
+
+
+
+		window.addEventListener(
+			'message',
+			function(event) {
+				// 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+				var loc = event.data;
+				if (loc && loc.module == 'locationPicker') {
+					//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+					console.log('location', loc);
+					that.setState({
+						location: loc
+					});
+					that.handleOpenMap();
+				}
+			},
+			false
+		);
 	}
+	Map = () => {
+		return (
+			<iframe
+				className={this.state.isShowMap ? 'show' : 'hide'}
+				style={{
+					position: 'fixed',
+					width: '100%',
+					height: '100vh'
+				}}
+				src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp"
+			/>
+		);
+	};
+
 	// 打开腾讯地图
-	handleOpenMap = () => {};
+	handleOpenMap = () => {
+		this.setState({
+			isShowMap: !this.state.isShowMap
+		});
+	};
 	componentDidMount() {}
 
 	// 选择上传图片
@@ -206,7 +230,7 @@ class Add extends Component {
 
 	// 检验数据
 	checkResult() {
-		// let img =
+		let upImage = this.state.upImage;
 		let arrear = this.arrear.state.value;
 		let contact = this.contact.state.value;
 		let plate_number = this.state.chepai[0] + this.state.chepai[1] + this.chepai_num.state.value;
@@ -214,6 +238,11 @@ class Add extends Component {
 		let address = this.address.state.value;
 		let appoint_time = this.state.appoint_time;
 		let code = this.code.state.value;
+		let location = this.state.location;
+
+		if (!upImage) {
+			return { status: false, msg: '请上传图片' };
+		}
 
 		if (!code || code === '') {
 			return { status: false, msg: '请输入验证码' };
@@ -236,11 +265,14 @@ class Add extends Component {
 		}
 
 		if (!address || address === '') {
-			return { status: false, msg: '取车地址不能为空' };
+			return { status: false, msg: '详细地址不能为空' };
 		}
 
 		if (!/^[1][3,4,5,7,8][0-9]{9}$/.test(phone)) {
 			return { status: false, msg: '手机号码格式不正确' };
+		}
+		if (location.poiname === '点击选择') {
+			return { status: false, msg: '点击选择取车地址' };
 		}
 
 		let formatData = {
@@ -250,7 +282,8 @@ class Add extends Component {
 			phone: phone, // 联系电话
 			address: address, // 取车地址
 			appoint_time: getNowFormatDate(appoint_time), // 取车时间
-			code: code // 短信验证码
+			code: code, // 短信验证码,
+			location: location
 		};
 		console.log(formatData);
 		return {
@@ -270,14 +303,14 @@ class Add extends Component {
 			return;
 		}
 
-		console.log(this.state);
+		console.log('预约成功！');
 	};
 
 	render() {
 		const { getFieldProps } = this.props.form;
 
 		return (
-			<div className="add">
+			<div className="addPage">
 				<div className="roww">
 					<div className="title">上传资料</div>
 					<div className="autoRow">
@@ -296,18 +329,6 @@ class Add extends Component {
 						<div className="key">身份证后四位数</div>
 						<div className="value">
 							<InputItem
-								{...getFieldProps('sfz', {
-									normalize: (v) => {
-										if (!v) {
-											return v;
-										}
-										console.log(v);
-										if (v === '.') {
-											return '';
-										}
-										return v.replace(/\./g, '');
-									}
-								})}
 								type={'money'}
 								ref={(el) => (this.arrear = el)}
 								clear
@@ -344,7 +365,7 @@ class Add extends Component {
 				</div>
 				<div className="row">
 					<div className="key">预约时间</div>
-					<div className="value">
+					<div className="value yuyuevalue">
 						<DatePicker mode="datetime" value={this.state.appoint_time} onChange={this.onDateChange}>
 							<List.Item arrow="horizontal" />
 						</DatePicker>
@@ -353,7 +374,16 @@ class Add extends Component {
 				<div className="row">
 					<div className="key">取车地址</div>
 					<div className="value" onClick={this.handleOpenMap}>
-						{/* <InputItem clear ref={(el) => (this.address = el)} /> */}
+						<div className="handleposi am-list-item">{this.state.location.poiname}</div>
+						<div className="no">
+							<List.Item arrow="horizontal" />
+						</div>
+					</div>
+				</div>
+				<div className="row">
+					<div className="key">详细地址</div>
+					<div className="value">
+						<InputItem clear ref={(el) => (this.address = el)} />
 					</div>
 				</div>
 				<div className="row">
@@ -374,7 +404,7 @@ class Add extends Component {
 				<div className="row">
 					<div className="key nopl">
 						<div>同城上线验车</div>
-						<Link to="/details" className="link help">
+						<Link to="/help/id/2" className="link">
 							了解详情
 						</Link>
 					</div>
@@ -384,10 +414,11 @@ class Add extends Component {
 				</div>
 				<div className="tip">
 					<div>点击提交预约则默认为同意</div>
-					<Link to="/agreement" className="link">
+					<Link to="/help/id/1" className="link">
 						《华基平台协议》
 					</Link>
 				</div>
+				{this.Map()}
 			</div>
 		);
 	}

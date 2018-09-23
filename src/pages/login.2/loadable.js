@@ -4,7 +4,7 @@ import Loadable from 'react-loadable';
 const LoadableComponent = Loadable ({
   loader: () => import ('./'),
   loading () {
-    return <div></div>;
+    return <div>页面加载中Loading...</div>;
   },
 });
 

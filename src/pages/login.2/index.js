@@ -11,11 +11,7 @@ class Login extends Component {
 	}
 
 	render() {
-		return (
-			<div className="helpPage">
-				helpPage
-			</div>
-		);
+		return <div>Login</div>;
 	}
 }
 const mapStateToProps = (store) => {

@@ -1,14 +1,44 @@
-#mapPage {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-}
-.show {
-	left: 0;
-	top: 0;
-	transition: all 1s ease;
-}
-.hide {
-	top: 100vh;
-	transition: all 1s ease;
+.mapPage {
+	position: relative;
+	display: flex;
+	height: 100vh;
+	flex-direction: column;
+	#mapPage {
+		width: 100%;
+		flex: 1;
+	}
+	.info{
+		flex: 0 80px;
+		box-shadow: 0 0 5px #ccc;
+		display: flex;
+		align-items: center;
+		padding: 0 20px;
+		.avatar{
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+		}
+		.phonepng{
+			width: 47px;
+			height: 47px;
+			border-radius: 50%;
+		}
+		.content{
+			flex: 1;
+			padding-left: 14px;
+			display: flex;
+			height: 60px;
+			justify-content: center;
+			flex-direction: column;
+			.nickname{
+				font-size: 14px;
+				color: #222222;
+				margin-bottom: 10px;
+			}
+			.phone{
+				font-size: 12px;
+				color: #7D7D7D;
+			}
+		}
+	}
 }

@@ -1,5 +1,5 @@
-.add {
-	height: 100vh;
+.addPage {
+	// height: 100vh;
 	background: #f8f8f8;
 	padding: 15px 15px;
 	font-size: 14px;
@@ -93,8 +93,15 @@
 			border-radius: 8px;
 			display: flex;
 			box-shadow: 0 0 5px #ededed;
-			div:first-child {
-				width: 100%;
+			&.yuyuevalue {
+				div:first-child {
+					width: 100%;
+				}
+			}
+			.handleposi {
+				display: flex;
+				padding-left: 20rpx !important;
+				align-items: center;
 			}
 			.am-list-item .am-input-control input {
 				color: #a5a5a5;
@@ -159,20 +166,6 @@
 	.link {
 		color: #5767c8;
 		margin-left: 5px;
-		&.help {
-			&::after {
-				content: '?';
-				width: 12px;
-				height: 12px;
-				font-size: 8px;
-				display: inline-block;
-				line-height: 12px;
-				text-align: center;
-				margin: 0 4px;
-				border-radius: 50%;
-				border: 1px solid #5767c8;
-			}
-		}
 	}
 	.am-list-extra {
 		flex: 1;
@@ -181,7 +174,17 @@
 	.am-list-item {
 		height: 46px;
 	}
-	.am-list-line:after{
+	.am-list-line:after {
 		display: none !important;
+	}
+	.show {
+		left: 0;
+		top: 0;
+		transition: all .5s ease-in;
+		z-index: 99;
+	}
+	.hide {
+		left: 100vw;
+		transition: all .5s ease-out;
 	}
 }
