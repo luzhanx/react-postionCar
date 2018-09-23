@@ -1,0 +1,184 @@
+.add {
+  height: 100vh;
+  background: #f8f8f8;
+  padding: 15px 15px;
+  font-size: 14px;
+  color: #666666;
+}
+.add .roww {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #ddd;
+  overflow: hidden;
+}
+.add .roww .title {
+  padding-left: 15px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.add .roww .title .value {
+  color: #a5a5a5;
+  flex: 1;
+}
+.add .roww .title .value .am-list-item .am-input-control .fake-input-container .fake-input {
+  color: #a5a5a5;
+  padding-right: 5px;
+}
+.add .roww .autoRow {
+  padding: 15px;
+  border-top: 1px solid #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
+}
+.add .roww .autoRow .addImg {
+  height: 210px;
+  border-radius: 8px;
+  border: 2px solid #f5f5f5;
+  margin: 10px 0;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.add .roww .autoRow .addImg:active {
+  opacity: .8;
+}
+.add .roww .autoRow .addImg .imgFile {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+}
+.add .roww .autoRow .addImg .addCss {
+  height: 100%;
+}
+.add .roww .autoRow .addImg .addCss::before {
+  content: '';
+  width: 3px;
+  height: 110px;
+  background: #dcdcdc;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+.add .roww .autoRow .addImg .addCss::after {
+  content: '';
+  width: 110px;
+  height: 3px;
+  background: #dcdcdc;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.add .row {
+  margin-top: 10px;
+}
+.add .row .key {
+  padding: 15px 15px;
+  padding-top: 10px;
+  display: flex;
+  position: relative;
+}
+.add .row .key.nopl {
+  padding-left: 0;
+  margin: 10px 0;
+}
+.add .row .value {
+  height: 46px;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  box-shadow: 0 0 5px #ededed;
+}
+.add .row .value div:first-child {
+  width: 100%;
+}
+.add .row .value .am-list-item .am-input-control input {
+  color: #a5a5a5;
+  font-size: 14px;
+}
+.add .row .value .chepai {
+  width: 100px !important;
+}
+.add .row .value .chepai .chepai_text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.add .row .value .chepai .chepai_text .chepai_item {
+  flex: 1;
+}
+.add .row .value .sendCode {
+  width: 140px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #5767c8;
+  font-size: 12px;
+}
+.add .row .value .am-list-item {
+  width: 100%;
+}
+.add .row .value .am-list-line {
+  width: 100%;
+}
+.add .row .value .chepainum {
+  flex: 1;
+  padding-right: 15px;
+}
+.add .row .value .chepainum .am-list-item.am-input-item {
+  padding-left: 0rem;
+}
+.add .row .value .chepainum .am-list-item .am-list-line {
+  padding-right: 0rem;
+}
+.add .submit {
+  height: 42px;
+  border-radius: 5px;
+  background: #5767c8;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+}
+.add .tip {
+  color: #878787;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+.add .link {
+  color: #5767c8;
+  margin-left: 5px;
+}
+.add .link.help::after {
+  content: '?';
+  width: 12px;
+  height: 12px;
+  font-size: 8px;
+  display: inline-block;
+  line-height: 12px;
+  text-align: center;
+  margin: 0 4px;
+  border-radius: 50%;
+  border: 1px solid #5767c8;
+}
+.add .am-list-extra {
+  flex: 1;
+  text-align: left !important;
+}
+.add .am-list-item {
+  height: 46px;
+}
+.add .am-list-line:after {
+  display: none !important;
+}
