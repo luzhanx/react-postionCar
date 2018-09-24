@@ -24,7 +24,6 @@ class Map extends Component {
 			script.src = 'https://map.qq.com/api/js?v=2.exp&callback=init';
 			document.body.appendChild(script);
 			this.props.dispatch(SetIncludeMap(true));
-			return;
 		}
 
 		setTimeout(() => {
