@@ -5,8 +5,12 @@ import posImg from '@/assets/img/pos.png';
 import avatarImg from '@/assets/img/avatar.jpg';
 import phoneImg from '@/assets/img/phone.png';
 import { SetIncludeMap } from './store/action';
+import Axios from 'axios';
 
 import './index.less';
+
+let map = null;
+let marker = null;
 
 class Map extends Component {
 	constructor(props) {
@@ -27,29 +31,37 @@ class Map extends Component {
 		}
 
 		setTimeout(() => {
-			var map = new window.QMap.Map(document.getElementById('mapPage'), {
+			map = new window.QMap.Map(document.getElementById('mapPage'), {
 				center: new window.QMap.LatLng(24.79188, 113.60425), // 地图的中心地理坐标。
-				zoom: 15 // 地图的中心地理坐标。
+				zoom: 17 // 地图的中心地理坐标。
 			});
 			var anchor = new window.QMap.Point(10, 30),
 				size = new window.QMap.Size(20, 40),
 				origin = new window.QMap.Point(0, 0),
 				icon = new window.QMap.MarkerImage(posImg, size, origin, anchor);
-			var marker = new window.QMap.Marker({
+			marker = new window.QMap.Marker({
 				icon: icon,
 				map: map,
 				position: map.getCenter()
 			});
-			let mapY = 113.60426;
-			setInterval(function() {
-				//经纬度信息
-				mapY = mapY - 0.0002;
-				map.panTo(new window.QMap.LatLng(24.79188, mapY));
-				marker.setPosition(map.getCenter());
-			}, 1000);
-		}, 500);
+			this.setMapPos();
+		}, 500);	
 	}
-
+	setMapPos(){
+		let that = this;
+		
+		Axios.get('https://vehicle-location.xtow.net/index/Index/location').then(result=> {
+			let res = result.data.result;
+			
+			map.panTo(new window.QMap.LatLng(res.lat, res.lng));
+			marker.setPosition(map.getCenter());
+			console.log(res);
+			
+			setTimeout(function() {
+				that.setMapPos();
+			}, 2000);
+		})
+	}
 	render() {
 		return (
 			<div className="mapPage">
@@ -59,7 +71,7 @@ class Map extends Component {
 
 					<div className="content">
 						<div className="nickname">林先生</div>
-						<div className="phone">联系电话：1313131313</div>
+						<div className="phone">联系电话：13076248607</div>
 					</div>
 					<a href="tel:13076248607">
 						<img src={phoneImg} className="phonepng" alt="" />
