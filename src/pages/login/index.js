@@ -7,13 +7,13 @@ class Login extends Component {
 	constructor(props) {
 		super(props);
 
-		document.title = '同城在线验车';
+		document.title = '预约详情';
 	}
 
 	render() {
 		return (
-			<div className="helpPage">
-				helpPage
+			<div className="detailPage">
+				预约详情
 			</div>
 		);
 	}

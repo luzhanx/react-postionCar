@@ -1,12 +1,15 @@
 # react-postionCar
 #### [定位车公众号网页](https://luzhanx.github.io/react-postionCar/#/)
 
-#### [React Antd](https://mobile.ant.design/components)
+#### [React Antd](https://mobile.ant.design/docs/react/introduce-cn)
 
 #### [API文档](https://www.kancloud.cn/xtuo/vehicle-location/770389)
 
+#### [图片预览](https://github.com/Caldis/react-zmage)
 
 #### [引用腾讯地图](https://lbs.qq.com/javascript_v2/index.html)
+
+#### [Api接口](https://vehicle-location.xtow.net)https://vehicle-location.xtow.net
 ```javascript
 <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script>
 <script>window.QMap = qq.maps</script>

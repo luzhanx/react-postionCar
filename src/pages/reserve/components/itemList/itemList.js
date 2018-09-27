@@ -90,7 +90,7 @@ class ItemList extends React.Component {
 										''
 									)}
 								</div>
-								<div className="info">
+								<Link to={`/reserve/detail/id/${item.id}`} className="info">
 									<div className="row">
 										<div className="key">服务人员：</div>
 										<div className="value">{item.personnel}</div>
@@ -103,7 +103,7 @@ class ItemList extends React.Component {
 										<div className="key">预约时间：</div>
 										<div className="value">{item.date}</div>
 									</div>
-								</div>
+								</Link>
 
 								<div
 									className={`status ${item.status === 1

@@ -11,13 +11,18 @@ import './index.less';
 
 let map = null;
 let marker = null;
+let time = null;
+let lat = 0;
+let lng = 0;
 
 class Map extends Component {
 	constructor(props) {
 		super(props);
 		document.title = '服务人员定位';
 	}
-	componentWillMount() {}
+	componentWillMount() {
+		console.log('订单ID是', this.props.match.params.id);
+	}
 	componentDidMount() {
 		// 是否已经载入了腾讯地图js
 		if (this.props.isIncludeMap) {
@@ -45,22 +50,28 @@ class Map extends Component {
 				position: map.getCenter()
 			});
 			this.setMapPos();
-		}, 500);	
+		}, 500);
 	}
-	setMapPos(){
+	setMapPos() {
 		let that = this;
-		
-		Axios.get('https://vehicle-location.xtow.net/index/Index/location').then(result=> {
+
+		Axios.get('https://vehicle-location.xtow.net/index/Index/location').then((result) => {
 			let res = result.data.result;
-			
-			map.panTo(new window.QMap.LatLng(res.lat, res.lng));
-			marker.setPosition(map.getCenter());
-			console.log(res);
-			
-			setTimeout(function() {
+
+			if (res.lat === lat && res.lng === lng) {
+				console.log(res, '坐标一样, 不改变');
+			} else {
+				lat = res.lat;
+				lng = res.lng;
+				map.panTo(new window.QMap.LatLng(lat, lng));
+				marker.setPosition(map.getCenter());
+				console.log(res);
+			}
+
+			time = setTimeout(function() {
 				that.setMapPos();
 			}, 2000);
-		})
+		});
 	}
 	render() {
 		return (
@@ -79,6 +90,11 @@ class Map extends Component {
 				</div>
 			</div>
 		);
+	}
+
+	componentWillUnmount() {
+		// 退出页面清除计时器
+		clearTimeout(time);
 	}
 }
 const mapStateToProps = (store) => {

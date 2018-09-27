@@ -20,10 +20,10 @@ const tabBarUnderlineStyle = {
 class Reserve extends Component {
 	constructor(props) {
 		super(props);
+		document.title = '预约列表';
 	}
 
-	componentDidMount() {
-	}
+	componentDidMount() {}
 
 	render() {
 		return (

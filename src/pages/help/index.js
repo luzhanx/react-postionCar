@@ -12,7 +12,7 @@ class Help extends Component {
 		super(props);
 
 		let id = props.match.params.id;
-		document.title = id == 1 ? '华基平台协议' : '同城在线验车';
+		document.title = id === 1 ? '华基平台协议' : '同城在线验车';
 
 		this.state = {
 			html: ''
@@ -21,11 +21,20 @@ class Help extends Component {
 	componentDidMount() {
 		let that = this;
 
-		let id = this.props.match.params.id;
-		console.log(this.props.helpHTML.length, this.props.helpHTML.length > 0)
-		if (this.props.helpHTML.length > 0 && id == 2 || this.props.agreementHTML.length > 0 && id == 1 ) {
-			return;
+		let id = parseInt(this.props.match.params.id);
+
+		// 如果id是协议1
+		if (id === 1) {
+			console.log(this.props.agreementHTML.length !== 0);
+			if (this.props.agreementHTML.length !== 0) {
+				return;
+			}
+		} else if (id === 2) {
+			if (this.props.helpHTML !== '') {
+				return;
+			}
 		}
+
 		Toast.loading('加载中');
 		Axios.get('https://vehicle-location.xtow.net/index/index/article', {
 			params: {
@@ -46,7 +55,7 @@ class Help extends Component {
 			});
 	}
 	render() {
-		const HTML = this.props.match.params.id == 1 ? this.props.agreementHTML : this.props.helpHTML;
+		const HTML = parseInt(this.props.match.params.id) === 1 ? this.props.agreementHTML : this.props.helpHTML;
 		return <div style={{ lineHeight: '18px' }} className="helpPage" dangerouslySetInnerHTML={{ __html: HTML }} />;
 	}
 }
