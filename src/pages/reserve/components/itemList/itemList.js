@@ -13,53 +13,74 @@ class ItemList extends React.Component {
 			down: true,
 			height: document.documentElement.clientHeight,
 			data: [],
-			hasMore: false
+			hasMore: true,
+			page: 1,
+			limit: 10
 		};
 	}
 
 	componentDidMount() {
 		let that = this;
 		const hei = this.state.height - ReactDOM.findDOMNode(this.ptr).offsetTop;
-
-		let id =
-			this.props.status === 0 ? 'reserve' : this.props.status === 1 ? '1' : this.props.status === 2 ? '2' : '3';
+		let page = this.state.page;
+		let limit = this.state.limit;
+		let status = this.props.status;
 		Toast.loading('数据加载中...');
 
-		Axios.get(`https://luzhanx.github.io/react-postionCar/api/${id}.json`, {
-			params: { id: Math.random() }
+		Axios.get(`/index/order/index`, {
+			params: { page: page, limit: limit, status: status }
 		}).then((result) => {
 			let res = result.data;
-			that.setState({
-				data: res.list,
-				height: hei,
-				refreshing: false
-			});
-			Toast.hide();
+			if (res.code === 0) {
+				that.setState({
+					data: res.data,
+					height: hei,
+					refreshing: false,
+					page: ++page
+				});
+				if(res.data.length < limit){
+					that.setState({
+						hasMore: false
+					});
+				}
+				Toast.hide();
+			}
 		});
 	}
 	// 上拉加载
 	onEndReached = (event) => {
 		// 加载完请求的10个数据
 		// HasMe:从后端数据，指示它是否是最后一页，这里是false
+		if(!this.state.hasMore){
+			return;
+		}
 
 		if (this.state.refreshing && !this.state.hasMore) {
 			return;
 		}
 
 		let that = this;
+		let page = this.state.page;
+		let limit = this.state.limit;
+		let status = this.props.status;
 
-		let id =
-			this.props.status === 0 ? 'reserve' : this.props.status === 1 ? '1' : this.props.status === 2 ? '2' : '3';
-
-		Axios.get(`https://luzhanx.github.io/react-postionCar/api/${id}.json`, {
-			params: { id: id }
+		Axios.get(`/index/order/index`, {
+			params: { page: page, limit: limit, status: status }
 		}).then((result) => {
 			let res = result.data;
 
-			that.setState({
-				refreshing: false,
-				data: [ ...that.state.data, ...res.list ]
-			});
+			if (res.code === 0) {
+				that.setState({
+					refreshing: false,
+					data: [ ...that.state.data, ...res.data ],
+					page: ++page
+				});
+				if(res.data.length < limit){
+					that.setState({
+						hasMore: false
+					});
+				}
+			}
 		});
 	};
 	render() {
@@ -81,7 +102,7 @@ class ItemList extends React.Component {
 						{this.state.data.map((item, rowID) => (
 							<div key={rowID} className="item">
 								<div className="license_plate">
-									<div className="title">{item.license_plate}</div>
+									<div className="title">{item.plate_number}</div>
 									{item.status === 2 ? (
 										<Link to={`/map/id/${item.id}`} className="toMap">
 											查看服务人员位置
@@ -97,11 +118,11 @@ class ItemList extends React.Component {
 									</div>
 									<div className="row">
 										<div className="key">联系电话：</div>
-										<div className="value">{item.phone}</div>
+										<div className="value">{item.tel}</div>
 									</div>
 									<div className="row">
 										<div className="key">预约时间：</div>
-										<div className="value">{item.date}</div>
+										<div className="value">{item.appoint_time}</div>
 									</div>
 								</Link>
 
@@ -110,7 +131,9 @@ class ItemList extends React.Component {
 										? 'treated'
 										: item.status === 2 ? 'conduct' : ''}`}
 								>
-									待处理
+									{item.status === 1
+										? '进行中'
+										: item.status === 2 ? '已完成' : '待处理'}
 								</div>
 							</div>
 						))}

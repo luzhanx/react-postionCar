@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom';
 import './index.less';
 
 class Home extends Component {
-	componentDidMount() {
-		document.cookie = 'PHPSESSID=' + 'vdnha4r26mq55g35im7pnhnnhs';
-	}
-
 	render() {
 		return (
 			<div className="homePage">

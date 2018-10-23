@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import Axios from 'axios';
 
 import './index.less';
 
@@ -10,8 +10,31 @@ class Login extends Component {
 
 		document.title = '支付信息';
 	}
+	state = {
+		server: 0,
+		sum: 0,
+		vip: 0,
+		year: 0
+	};
 	componentWillMount() {
-		console.log('支付订单ID是', this.props.match.params.id);
+		let id = this.props.match.params.id;
+		let that = this;
+
+		Axios.get('/index/order/payDetails', {
+			params: {
+				id: id
+			}
+		}).then(({ data }) => {
+			// console.log(data);
+			if(data.code === 0){
+				that.setState({
+					server: data.data.server,
+					sum: data.data.sum,
+					vip: data.data.vip,
+					year: data.data.year
+				});
+			}
+		});
 	}
 	render() {
 		return (
@@ -20,19 +43,20 @@ class Login extends Component {
 					<div className="row">
 						<div className="key">年审费</div>
 						<div className="value">
-							<span className="conduct">￥300.00</span>
+							<span className="conduct">￥{this.state.year}</span>
 						</div>
 					</div>
 					<div className="row">
 						<div className="key">服务费</div>
 						<div className="value">
-							<span className="conduct">￥200.00</span>
+							<span className="conduct">￥{this.state.server}</span>
 						</div>
 					</div>
-					<div className="row">
+
+					<div className="row" style={{display: `${this.state.vip > 0 ? 'flex': 'none'}`}}>
 						<div className="key">VIP</div>
 						<div className="value">
-							<span className="conduct">￥100.00</span>
+							<span className="conduct">￥{this.state.vip}</span>
 						</div>
 					</div>
 				</div>
@@ -40,7 +64,7 @@ class Login extends Component {
 					<div className="row">
 						<div className="key" />
 						<div className="value">
-							<span className="conduct">合计：￥600.00</span>
+							<span className="conduct">合计：￥{this.state.sum}</span>
 						</div>
 					</div>
 				</div>
@@ -48,16 +72,5 @@ class Login extends Component {
 		);
 	}
 }
-const mapStateToProps = (store) => {
-	return {
-		xxx: store.xxx
-	};
-};
-const mapDispatchToProps = (dispatch) => {
-	return {
-		func() {
-			dispatch();
-		}
-	};
-};
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
+
+export default withRouter(Login);

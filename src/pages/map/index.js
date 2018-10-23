@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import posImg from '@/assets/img/pos.png';
-import avatarImg from '@/assets/img/avatar.jpg';
 import phoneImg from '@/assets/img/phone.png';
-import { SetIncludeMap } from './store/action';
+import { Toast } from 'antd-mobile';
+
 import Axios from 'axios';
 
 import './index.less';
@@ -20,21 +20,15 @@ class Map extends Component {
 		super(props);
 		document.title = '服务人员定位';
 	}
+	state = {
+		username: '',
+		tel: '',
+		avatar: ''
+	};
 	componentWillMount() {
 		console.log('订单ID是', this.props.match.params.id);
 	}
 	componentDidMount() {
-		// 是否已经载入了腾讯地图js
-		if (this.props.isIncludeMap) {
-			console.log('已经加载了腾讯地图');
-		} else {
-			var script = document.createElement('script');
-			script.type = 'text/javascript';
-			script.src = 'https://map.qq.com/api/js?v=2.exp&callback=init';
-			document.body.appendChild(script);
-			this.props.dispatch(SetIncludeMap(true));
-		}
-
 		setTimeout(() => {
 			map = new window.QMap.Map(document.getElementById('mapPage'), {
 				center: new window.QMap.LatLng(24.79188, 113.60425), // 地图的中心地理坐标。
@@ -54,18 +48,30 @@ class Map extends Component {
 	}
 	setMapPos() {
 		let that = this;
+		let id = this.props.match.params.id;
 
-		Axios.get('https://vehicle-location.xtow.net/index/Index/location').then((result) => {
-			let res = result.data.result;
-
-			if (res.lat === lat && res.lng === lng) {
-				console.log(res, '坐标一样, 不改变');
+		Axios.get('https://vehicle-location.xtow.net/index/Index/location', {
+			params: {
+				id: id
+			}
+		}).then((result) => {
+			let res = result.data.data;
+			that.setState({
+				username: res.server.data.username,
+				avatar: res.server.data.avatar,
+				tel: res.server.data.tel
+			});
+			if (result.data.code === 0) {
+				if (res.local.lat === lat && res.local.lng === lng) {
+					console.log(res, '坐标一样, 不改变');
+				} else {
+					lat = res.local.lat;
+					lng = res.local.lng;
+					map.panTo(new window.QMap.LatLng(lat, lng));
+					marker.setPosition(map.getCenter());
+				}
 			} else {
-				lat = res.lat;
-				lng = res.lng;
-				map.panTo(new window.QMap.LatLng(lat, lng));
-				marker.setPosition(map.getCenter());
-				console.log(res);
+				return Toast.fail(result.data.msg, 2);
 			}
 
 			time = setTimeout(function() {
@@ -78,13 +84,13 @@ class Map extends Component {
 			<div className="mapPage">
 				<div id="mapPage" />
 				<div className="info">
-					<img src={avatarImg} className="avatar" alt="" />
+					<img src={this.state.avatar} className="avatar" alt="" />
 
 					<div className="content">
-						<div className="nickname">林先生</div>
-						<div className="phone">联系电话：13076248607</div>
+						<div className="nickname">{this.state.username}</div>
+						<div className="phone">联系电话：{this.state.tel}</div>
 					</div>
-					<a href="tel:13076248607">
+					<a href={`tel:${this.state.tel}`}>
 						<img src={phoneImg} className="phonepng" alt="" />
 					</a>
 				</div>

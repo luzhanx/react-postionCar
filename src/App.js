@@ -20,6 +20,13 @@ import PaySubmit from '@/pages/paySubmit/loadable';
 import store from '@/store';
 
 class App extends Component {
+	componentWillMount() {
+		document.cookie = 'PHPSESSID=' + 'brigngvis67vkg4jgmuak90o5a';
+		if (document.cookie.indexOf('PHPSESSID') === -1) {
+			// window.location.href = '/index/login/weixin'
+		}
+	}
+
 	render() {
 		return (
 			<div className="app">

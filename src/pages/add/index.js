@@ -4,7 +4,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { InputItem, DatePicker, List, Picker, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import Axios from 'axios';
-import wx from 'weixin-js-sdk';
+// import wx from 'weixin-js-sdk';
 
 import chepais from './chepai';
 import './index.less';
@@ -67,6 +67,7 @@ class Add extends Component {
 
 		document.title = '预约详情';
 		this.state = {
+			file: '',
 			upImage: '',
 			chepai: [ '粤', 'B' ],
 			countdown: codeSendMin,
@@ -81,14 +82,12 @@ class Add extends Component {
 	componentWillMount() {
 		let that = this;
 
-
-
 		window.addEventListener(
 			'message',
 			function(event) {
 				// 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
 				var loc = event.data;
-				if (loc && loc.module == 'locationPicker') {
+				if (loc && loc.module === 'locationPicker') {
 					//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
 					console.log('location', loc);
 					that.setState({
@@ -103,6 +102,7 @@ class Add extends Component {
 	Map = () => {
 		return (
 			<iframe
+				title="mapIframe"
 				className={this.state.isShowMap ? 'show' : 'hide'}
 				style={{
 					position: 'fixed',
@@ -126,22 +126,18 @@ class Add extends Component {
 	handleUpImage = (e) => {
 		// console.log(e.target.value);
 		let that = this;
-
-		if (!e.target.files[0]) {
+		let file = e.target.files[0];
+		if (!file) {
 			return;
 		}
 		var reads = new FileReader();
 		reads.readAsDataURL(e.target.files[0]);
 		reads.onload = function(e) {
-			console.log(this.result);
 			that.setState({
-				upImage: this.result
+				upImage: this.result,
+				file: file
 			});
 		};
-		this.setState({
-			// upImage: e.target.files[0]
-			upImage: e.target.value
-		});
 	};
 
 	// 开始发送验证码
@@ -204,7 +200,7 @@ class Add extends Component {
 			}
 		})
 			.then((result) => {
-				let res = result;
+				let res = result.data;
 
 				if (res.code === 0) {
 					Toast.success(res.msg, 1);
@@ -230,6 +226,7 @@ class Add extends Component {
 
 	// 检验数据
 	checkResult() {
+		let file = this.state.file;
 		let upImage = this.state.upImage;
 		let arrear = this.arrear.state.value;
 		let contact = this.contact.state.value;
@@ -240,7 +237,7 @@ class Add extends Component {
 		let code = this.code.state.value;
 		let location = this.state.location;
 
-		if (!upImage) {
+		if (!upImage && file) {
 			return { status: false, msg: '请上传图片' };
 		}
 
@@ -274,6 +271,7 @@ class Add extends Component {
 		if (location.poiname === '点击选择') {
 			return { status: false, msg: '点击选择取车地址' };
 		}
+		plate_number = this.state.chepai[0] + this.state.chepai[1] + ' - ' + this.chepai_num.state.value;
 
 		let formatData = {
 			arrear: arrear, // 身份证后四位数
@@ -289,25 +287,51 @@ class Add extends Component {
 		return {
 			status: true,
 			msg: '数据验证通过',
-			formatData
+			formatData,
+			img: file
 		};
 	}
 
 	// 立即预约
 	submit = () => {
 		// let { contact, arrear, chepai, plate_number, phone, address, appoint_time, code } = this.state;
-
+		let that = this;
 		let checkResult = this.checkResult();
+
 		if (!checkResult.status) {
 			Toast.fail(checkResult.msg, 1.5);
 			return;
 		}
 
-		console.log('预约成功！');
+		let formData = new FormData(); // 创建form对象
+		formData.append('img', checkResult.img); // 通过append向form对象添加数据,可以通过append继续添加数据
+		formData.append('arrear', checkResult.formatData.arrear);
+		formData.append('contact', checkResult.formatData.contact);
+		formData.append('plate_number', checkResult.formatData.plate_number);
+		formData.append('phone', checkResult.formatData.phone);
+		formData.append('address', checkResult.formatData.address);
+		formData.append('appoint_time', checkResult.formatData.appoint_time);
+		formData.append('code', checkResult.formatData.code);
+
+		let config = {
+			headers: { 'Content-Type': 'multipart/form-data' }
+		};
+
+		Axios.post('/index/Order/add', formData, config).then(({ data }) => {
+			console.log(data);
+			if (data.code === 0) {
+				const id = data.result.id;
+				Toast.success(data.msg, 2, () => {
+					that.props.history.push(`/reserve/paySubmit/id/${id}`);
+				});
+			} else {
+				return Toast.fail(data.msg, 2);
+			}
+		});
 	};
 
 	render() {
-		const { getFieldProps } = this.props.form;
+		// const { getFieldProps } = this.props.form;
 
 		return (
 			<div className="addPage">
@@ -422,8 +446,6 @@ class Add extends Component {
 			</div>
 		);
 	}
-
-	componentDidMount() {}
 }
 const mapStateToProps = (store) => {
 	return {

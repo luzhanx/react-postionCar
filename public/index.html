@@ -13,7 +13,8 @@
 	<!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json"> -->
 	<!-- 3KLBZ-7PHH6-HCCST-M67GO-EYZHJ-YIBXS -->
 	<!-- <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script> -->
-  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+	<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+	<script src="./static/js/fastclick.js"></script>
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -48,10 +49,16 @@
     You need to enable JavaScript to run this app.
   </noscript>
 	<div id="root"></div>
+	<script src="https://map.qq.com/api/js?v=2.exp&callback=init"></script>
 	<script>
 		function init(){
 			window.QMap = qq.maps
 			console.log(window.QMap)
+		}
+		if ('addEventListener' in document) {
+		document.addEventListener('DOMContentLoaded', function() {
+				FastClick.attach(document.body);
+			}, false);
 		}
 	</script>
   <!--

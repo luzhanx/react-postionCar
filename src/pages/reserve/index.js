@@ -38,10 +38,10 @@ class Reserve extends Component {
 					useOnPan={true}
 					prerenderingSiblingsNumber={1}
 				>
-					<ListAll status={0} />
-					<ListTreated status={1} />
-					<ListConduct status={2} />
-					<ListCompleted status={3} />
+					<ListAll status={''} />
+					<ListTreated status={0} />
+					<ListConduct status={1} />
+					<ListCompleted status={2} />
 				</Tabs>
 			</div>
 		);

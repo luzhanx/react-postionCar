@@ -96,18 +96,11 @@
 		"less-loader": "^4.1.0"
 	},
 	"proxy": {
-		"/index": {
+		"/": {
 			"target": "https://vehicle-location.xtow.net",
 			"changeOrigin": true,
 			"pathRewrite": {
-				"^/index": "/"
-			}
-		},
-		"/api": {
-			"target": "https://vehicle-location.xtow.net",
-			"changeOrigin": true,
-			"pathRewrite": {
-				"^/api": "/"
+				"^/": "/"
 			}
 		}
 	}
