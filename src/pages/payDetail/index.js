@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Axios from 'axios';
+import { Toast } from 'antd-mobile';
 
 import './index.less';
 
@@ -33,6 +34,8 @@ class Login extends Component {
 					vip: data.data.vip,
 					year: data.data.year
 				});
+			} else {
+				return Toast.fail(data.msg, 2);
 			}
 		});
 	}

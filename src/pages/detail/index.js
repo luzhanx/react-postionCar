@@ -113,15 +113,17 @@ class Login extends Component {
 						</div>
 					</div>
 				</div>
-				<div className="rows">
-					<Link to={`/map/id/${this.state.id}`} className="row">
-						<div className="key">服务人员定位</div>
-						<div className="value">
-							<span />
-							<i className="iconfont icon-right" />
-						</div>
-					</Link>
-				</div>
+				{this.state.status === 1 ? (
+					<div className="rows">
+						<Link to={`/map/id/${this.state.id}`} className="row">
+							<div className="key">服务人员定位</div>
+							<div className="value">
+								<span />
+								<i className="iconfont icon-right" />
+							</div>
+						</Link>
+					</div>
+				) : null}
 
 				<div className="rows">
 					<div className="row">

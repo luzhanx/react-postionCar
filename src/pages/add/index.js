@@ -324,6 +324,8 @@ class Add extends Component {
 				Toast.success(data.msg, 2, () => {
 					that.props.history.push(`/reserve/paySubmit/id/${id}`);
 				});
+			} else if (data.code === 2) {
+				window.location.href = '/index/login/weixin';
 			} else {
 				return Toast.fail(data.msg, 2);
 			}

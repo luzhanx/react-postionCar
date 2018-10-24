@@ -34,7 +34,7 @@ class ItemList extends React.Component {
 			if (res.code === 0) {
 				that.setState({
 					data: res.data,
-					height: hei,
+					// height: hei,
 					refreshing: false,
 					page: ++page
 				});
@@ -44,6 +44,8 @@ class ItemList extends React.Component {
 					});
 				}
 				Toast.hide();
+			}else if(res.code === 2){
+				window.location.href = '/index/login/weixin'
 			}
 		});
 	}
@@ -99,6 +101,9 @@ class ItemList extends React.Component {
 					onRefresh={this.onEndReached}
 				>
 					<div className="tabPage">
+						{/* {this.state.data.length === 0 ? (
+							// <Link className="tttip" to={`/add`}>点击添加预约</Link>
+						):null} */}
 						{this.state.data.map((item, rowID) => (
 							<div key={rowID} className="item">
 								<div className="license_plate">
@@ -137,7 +142,7 @@ class ItemList extends React.Component {
 								</div>
 							</div>
 						))}
-						{this.state.hasMore === false ? <div className="tip">无更多记录</div> : <div />}
+						{/* {this.state.hasMore === false ? <div className="tip">无更多记录</div> : <div />} */}
 					</div>
 				</PullToRefresh>
 			</div>

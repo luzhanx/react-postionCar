@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 // 引入组件
-import Home from '@/pages/home/loadable';
+// import Home from '@/pages/home/loadable';
 // import Login from '@/pages/login/loadable';
 import Reserve from '@/pages/reserve/loadable';
 // import Test from '@/pages/test';
@@ -20,11 +20,10 @@ import PaySubmit from '@/pages/paySubmit/loadable';
 import store from '@/store';
 
 class App extends Component {
-	componentWillMount() {
-		document.cookie = 'PHPSESSID=' + 'brigngvis67vkg4jgmuak90o5a';
-		if (document.cookie.indexOf('PHPSESSID') === -1) {
-			// window.location.href = '/index/login/weixin'
-		}
+	componentDidMount() {
+		// if (document.cookie.indexOf('PHPSESSID') === -1) {
+		// 	window.location.href = '/index/login/weixin'
+		// }
 	}
 
 	render() {
@@ -32,7 +31,7 @@ class App extends Component {
 			<div className="app">
 				<Provider store={store}>
 					<Switch>
-						<Route path="/" exact component={Home} />
+						<Route path="/" exact component={Reserve} />
 						<Route path="/add" exact component={Add} />
 						<Route path="/map/id/:id" exact component={Map} />
 						<Route path="/reserve" exact component={Reserve} />

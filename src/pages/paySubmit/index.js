@@ -109,7 +109,7 @@ class PaySubmit extends Component {
 				console.log(res);
 				if (res.err_msg === 'get_brand_wcpay_request:ok') {
 					Toast.success('支付成功', 2, ()=> {
-						that.props.history.push('reserve/pay');
+						that.props.history.push('/reserve/pay');
 					});
 				} else {
 					Toast.fail('支付失败', 2);
