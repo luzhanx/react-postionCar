@@ -108,7 +108,7 @@ class ItemList extends React.Component {
 							<div key={rowID} className="item">
 								<div className="license_plate">
 									<div className="title">{item.plate_number}</div>
-									{item.status === 2 ? (
+									{item.status === 1 || item.status === 2? (
 										<Link to={`/map/id/${item.id}`} className="toMap">
 											查看服务人员位置
 										</Link>

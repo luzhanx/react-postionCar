@@ -35,6 +35,9 @@ class Login extends Component {
 				id: id
 			}
 		}).then(({ data }) => {
+			if (data.code === 2) {
+				return (window.location.href = '/index/login/weixin');
+			}
 			// console.log(data);
 			that.setState({
 				id: data.id,

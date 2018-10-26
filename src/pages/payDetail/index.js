@@ -27,13 +27,15 @@ class Login extends Component {
 			}
 		}).then(({ data }) => {
 			// console.log(data);
-			if(data.code === 0){
+			if (data.code === 0) {
 				that.setState({
 					server: data.data.server,
 					sum: data.data.sum,
 					vip: data.data.vip,
 					year: data.data.year
 				});
+			} else if (data.code === 2) {
+				window.location.href = '/index/login/weixin';
 			} else {
 				return Toast.fail(data.msg, 2);
 			}
@@ -56,7 +58,7 @@ class Login extends Component {
 						</div>
 					</div>
 
-					<div className="row" style={{display: `${this.state.vip > 0 ? 'flex': 'none'}`}}>
+					<div className="row" style={{ display: `${this.state.vip > 0 ? 'flex' : 'none'}` }}>
 						<div className="key">VIP</div>
 						<div className="value">
 							<span className="conduct">￥{this.state.vip}</span>
