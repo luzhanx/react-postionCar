@@ -21,9 +21,7 @@ import store from '@/store';
 
 class App extends Component {
 	componentDidMount() {
-		// if (document.cookie.indexOf('PHPSESSID') === -1) {
-		// 	window.location.href = '/index/login/weixin'
-		// }
+
 	}
 
 	render() {

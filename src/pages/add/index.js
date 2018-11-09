@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { InputItem, DatePicker, List, Picker, Toast } from 'antd-mobile';
+import { InputItem, List, Picker, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import Axios from 'axios';
 // import wx from 'weixin-js-sdk';
@@ -19,33 +19,58 @@ if (isIPhone) {
 	};
 }
 
+const dateArr = [{
+	value: '08:00 - 10:00',
+	label: '08:00 - 10:00',
+},{
+	value: '09:00 - 11:00',
+	label: '09:00 - 11:00',
+},{
+	value: '10:00 - 12:00',
+	label: '10:00 - 12:00',
+},{
+	value: '11:00 - 13:00',
+	label: '11:00 - 13:00',
+},{
+	value: '12:00 - 14:00',
+	label: '12:00 - 14:00',
+},{
+	value: '13:00 - 15:00',
+	label: '13:00 - 15:00',
+},{
+	value: '14:00 - 16:00',
+	label: '14:00 - 16:00',
+},{
+	value: '15:00 - 17:00',
+	label: '15:00 - 17:00',
+}]
 // 格式化时间 yyyy-MM-dd HH:MM:SS
-const getNowFormatDate = (date) => {
-	console.log(date);
-	var seperator1 = '-';
-	var seperator2 = ':';
-	var month = date.getMonth() + 1;
-	var strDate = date.getDate();
-	if (month >= 1 && month <= 9) {
-		month = '0' + month;
-	}
-	if (strDate >= 0 && strDate <= 9) {
-		strDate = '0' + strDate;
-	}
-	var currentdate =
-		date.getFullYear() +
-		seperator1 +
-		month +
-		seperator1 +
-		strDate +
-		' ' +
-		date.getHours() +
-		seperator2 +
-		date.getMinutes() +
-		seperator2 +
-		date.getSeconds();
-	return currentdate;
-};
+// const getNowFormatDate = (date) => {
+// 	console.log(date);
+// 	var seperator1 = '-';
+// 	var seperator2 = ':';
+// 	var month = date.getMonth() + 1;
+// 	var strDate = date.getDate();
+// 	if (month >= 1 && month <= 9) {
+// 		month = '0' + month;
+// 	}
+// 	if (strDate >= 0 && strDate <= 9) {
+// 		strDate = '0' + strDate;
+// 	}
+// 	var currentdate =
+// 		date.getFullYear() +
+// 		seperator1 +
+// 		month +
+// 		seperator1 +
+// 		strDate +
+// 		' ' +
+// 		date.getHours() +
+// 		seperator2 +
+// 		date.getMinutes() +
+// 		seperator2 +
+// 		date.getSeconds();
+// 	return currentdate;
+// };
 
 //车牌号验证方法
 function isVehicleNumber(vehicleNumber) {
@@ -69,10 +94,11 @@ class Add extends Component {
 		this.state = {
 			file: '',
 			upImage: '',
-			chepai: [ '粤', 'B' ],
+			chepai: [ '粤', 'A' ],
 			countdown: codeSendMin,
 			sendCodeText: '发送验证码',
 			isShowMap: false,
+			address: '',
 			location: {
 				poiname: '点击选择'
 			}
@@ -89,9 +115,9 @@ class Add extends Component {
 				var loc = event.data;
 				if (loc && loc.module === 'locationPicker') {
 					//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
-					console.log('location', loc);
 					that.setState({
-						location: loc
+						location: loc,
+						address: loc.poiaddress
 					});
 					that.handleOpenMap();
 				}
@@ -120,7 +146,13 @@ class Add extends Component {
 			isShowMap: !this.state.isShowMap
 		});
 	};
-	componentDidMount() {}
+	componentDidMount() {
+		Axios.get('https://vehicle-location.xtow.net/index/login/show').then(({data})=> {
+			if(data.code === 2){
+				window.location.href = '/index/login/weixin?reurl=' + 'add'
+			}
+		})
+	}
 
 	// 选择上传图片
 	handleUpImage = (e) => {
@@ -153,7 +185,7 @@ class Add extends Component {
 		} else {
 			// val.setAttribute('disabled', true);
 			// val.value = '重新发送(' + countdown + ')';
-			console.log(countdown);
+			// console.log(countdown);
 			that.setState({
 				sendCodeText: `重新发送 ${countdown}s`,
 				countdown: --countdown
@@ -218,7 +250,6 @@ class Add extends Component {
 	};
 	// 预约时间
 	onDateChange = (value) => {
-		console.log(value);
 		this.setState({
 			appoint_time: value
 		});
@@ -238,7 +269,7 @@ class Add extends Component {
 		let location = this.state.location;
 
 		if (!upImage && file) {
-			return { status: false, msg: '请上传图片' };
+			return { status: false, msg: '请添加车辆行驶证' };
 		}
 
 		if (!code || code === '') {
@@ -246,7 +277,7 @@ class Add extends Component {
 		}
 
 		if (!arrear || arrear === '') {
-			return { status: false, msg: '身份证格式错误' };
+			return { status: false, msg: '机构代码证格式错误' };
 		}
 
 		if (!contact || contact === '') {
@@ -274,12 +305,12 @@ class Add extends Component {
 		plate_number = this.state.chepai[0] + this.state.chepai[1] + ' - ' + this.chepai_num.state.value;
 
 		let formatData = {
-			arrear: arrear, // 身份证后四位数
+			arrear: arrear, // 机构代码6位
 			contact: contact, // 联系人
 			plate_number: plate_number, // 车牌号
 			phone: phone, // 联系电话
 			address: address, // 取车地址
-			appoint_time: getNowFormatDate(appoint_time), // 取车时间
+			appoint_time: appoint_time, // 取车时间
 			code: code, // 短信验证码,
 			location: location
 		};
@@ -338,7 +369,7 @@ class Add extends Component {
 		return (
 			<div className="addPage">
 				<div className="roww">
-					<div className="title">上传资料</div>
+					<div className="title">上传资料(车辆行驶证)</div>
 					<div className="autoRow">
 						<div className="addImg" style={{ backgroundImage: `url(${this.state.upImage})` }}>
 							<input
@@ -352,13 +383,13 @@ class Add extends Component {
 						</div>
 					</div>
 					<div className="title">
-						<div className="key">身份证后四位数</div>
+						<div className="key">机构代码证前六位</div>
 						<div className="value">
 							<InputItem
 								type={'money'}
 								ref={(el) => (this.arrear = el)}
 								clear
-								maxLength={4}
+								maxLength={6}
 								moneyKeyboardWrapProps={moneyKeyboardWrapProps}
 							/>
 						</div>
@@ -392,9 +423,9 @@ class Add extends Component {
 				<div className="row">
 					<div className="key">预约时间</div>
 					<div className="value yuyuevalue">
-						<DatePicker mode="datetime" value={this.state.appoint_time} onChange={this.onDateChange}>
-							<List.Item arrow="horizontal" />
-						</DatePicker>
+					<Picker title="预约时间" value={this.state.appoint_time} data={dateArr} cols={1} onChange={this.onDateChange}>
+						<List.Item arrow="horizontal" />
+        	</Picker>
 					</div>
 				</div>
 				<div className="row">
@@ -409,7 +440,12 @@ class Add extends Component {
 				<div className="row">
 					<div className="key">详细地址</div>
 					<div className="value">
-						<InputItem clear ref={(el) => (this.address = el)} />
+						<InputItem clear ref={(el) => (this.address = el)} value={this.state.address} onChange={(e)=> {
+							console.log(e)
+							this.setState({
+								address: e
+							})
+						}} />
 					</div>
 				</div>
 				<div className="row">

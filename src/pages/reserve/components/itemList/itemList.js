@@ -1,6 +1,6 @@
 import { PullToRefresh, Toast } from 'antd-mobile';
 import React from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ class ItemList extends React.Component {
 
 	componentDidMount() {
 		let that = this;
-		const hei = this.state.height - ReactDOM.findDOMNode(this.ptr).offsetTop;
+		// const hei = this.state.height - ReactDOM.findDOMNode(this.ptr).offsetTop;
 		let page = this.state.page;
 		let limit = this.state.limit;
 		let status = this.props.status;
@@ -108,15 +108,15 @@ class ItemList extends React.Component {
 							<div key={rowID} className="item">
 								<div className="license_plate">
 									<div className="title">{item.plate_number}</div>
-									{item.status === 1 || item.status === 2? (
+									{/* {item.status === 1 || item.status === 2? (
 										<Link to={`/map/id/${item.id}`} className="toMap">
 											查看服务人员位置
 										</Link>
 									) : (
 										''
-									)}
+									)} */}
 								</div>
-								<Link to={`/reserve/detail/id/${item.id}`} className="info">
+								<Link to={item.pay_status === 0 ? `/reserve/paySubmit/id/${item.id}` : `/reserve/detail/id/${item.id}`} className="info" >
 									<div className="row">
 										<div className="key">服务人员：</div>
 										<div className="value">{item.personnel}</div>
@@ -130,7 +130,6 @@ class ItemList extends React.Component {
 										<div className="value">{item.appoint_time}</div>
 									</div>
 								</Link>
-
 								<div
 									className={`status ${item.status === 1
 										? 'treated'
@@ -138,7 +137,7 @@ class ItemList extends React.Component {
 								>
 									{item.status === 1
 										? '进行中'
-										: item.status === 2 ? '已完成' : '待处理'}
+										: item.status === 2 ? '已完成' : item.pay_status === 0 ? '未支付': item.pay_status === 1 ? '待处理':'已退款'}
 								</div>
 							</div>
 						))}

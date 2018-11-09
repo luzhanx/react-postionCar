@@ -16,7 +16,7 @@ class Login extends Component {
 	state = {
 		status: '', // 0=待处理 1=处理中 2=已完成
 		img: '', //现场图片
-		arrear: '', //身份证后4
+		arrear: '', //机构代码前6
 		plate_number: '', //车牌
 		contact: '', //联系人,
 		appoint_time: '', //预约时间,
@@ -43,7 +43,7 @@ class Login extends Component {
 				id: data.id,
 				status: data.status, // 0=待处理 1=处理中 2=已完成
 				img: data.img, //现场图片
-				arrear: data.arrear, //身份证后4
+				arrear: data.arrear, //机构代码6
 				plate_number: data.plate_number, //车牌
 				contact: data.contact, //联系人,
 				appoint_time: data.appoint_time, //预约时间,
@@ -130,7 +130,7 @@ class Login extends Component {
 
 				<div className="rows">
 					<div className="row">
-						<div className="key">上传资料</div>
+						<div className="key">上传资料(车辆行驶证)</div>
 						<div className="value">
 							<span className="" />
 						</div>
@@ -146,7 +146,7 @@ class Login extends Component {
 					</div>
 
 					<div className="row">
-						<div className="key">身份证后四位数</div>
+						<div className="key">机构代码前六位</div>
 						<div className="value">
 							<span className="">{this.state.arrear}</span>
 						</div>
