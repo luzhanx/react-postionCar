@@ -608,6 +608,7 @@ class Add extends Component {
 								ref={(el) => (this.arrear = el)}
 								clear
 								maxLength={6}
+								placeholder="请输入"
 							/>
 						</div>
 					</div>
