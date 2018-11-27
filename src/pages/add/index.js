@@ -605,11 +605,9 @@ class Add extends Component {
 						<div className="key"> 身份证后四位 / 机构代码证前六位 </div>
 						<div className="value">
 							<InputItem
-								type={'money'}
 								ref={(el) => (this.arrear = el)}
 								clear
 								maxLength={6}
-								moneyKeyboardWrapProps={moneyKeyboardWrapProps}
 							/>
 						</div>
 					</div>
