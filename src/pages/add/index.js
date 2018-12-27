@@ -335,7 +335,7 @@ class Add extends Component {
 		});
 	};
 	componentDidMount() {
-		Axios.get('https://vehicle-location.xtow.net/index/login/show').then(({ data }) => {
+		Axios.get('/index/login/show').then(({ data }) => {
 			if (data.code === 2) {
 				window.location.href = '/index/login/weixin?reurl=' + 'add';
 			}
