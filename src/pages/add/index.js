@@ -411,7 +411,7 @@ class Add extends Component {
 			return;
 		}
 		Toast.loading('发送验证码中');
-		Axios.get('https://vehicle-location.xtow.net/index/Login/sendSmsCode', {
+		Axios.get('/index/Login/sendSmsCode', {
 			params: {
 				phone: phoneVal
 			}
@@ -561,9 +561,8 @@ class Add extends Component {
 				'Content-Type': 'multipart/form-data'
 			}
 		};
-
+		Toast.loading('预约中', 0);
 		Axios.post('/index/Order/add', formData, config).then(({ data }) => {
-			console.log(data);
 			if (data.code === 0) {
 				const id = data.result.id;
 				Toast.success(data.msg, 2, () => {

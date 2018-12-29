@@ -50,7 +50,7 @@ class Map extends Component {
 		let that = this;
 		let id = this.props.match.params.id;
 
-		Axios.get('https://vehicle-location.xtow.net/index/Index/location', {
+		Axios.get('/index/Index/location', {
 			params: {
 				id: id
 			}

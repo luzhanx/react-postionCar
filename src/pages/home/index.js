@@ -8,7 +8,7 @@ class Home extends Component {
 		return (
 			<div className="homePage">
 				<li>
-					<a href="https://vehicle-location.xtow.net/index/login/weixin">微信授权登录</a>
+					<a href="/index/login/weixin">微信授权登录</a>
 				</li>
 				<li>
 					<Link to="/reserve">预约列表</Link>

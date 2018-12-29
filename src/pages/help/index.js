@@ -36,7 +36,7 @@ class Help extends Component {
 		}
 
 		Toast.loading('加载中');
-		Axios.get('https://vehicle-location.xtow.net/index/index/article', {
+		Axios.get('/index/index/article', {
 			params: {
 				id: id
 			}
